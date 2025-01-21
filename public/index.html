@@ -98,10 +98,25 @@ function create ()
 	this.player2PointsText = this.add.text(500, 40, `Player2: ${this.player2_points}`, { font: '16px Arial', fill: '#FFFFFF'});
 }
 
+function send_scores () 
+{
+
+	let scores = {
+	
+	score1: player1_points,
+	score2: player2_points
+	};
+
+	ws.send(JSON.stringify(score));
+
+}
+
 
 
 function update ()
 {
+
+
 	let score1 = player1_points;
 	let score2 = player2_points;
 
@@ -122,7 +137,7 @@ function update ()
 		this.player1PointsText.setText(`Player1: ${this.player1_points}`);
 		ball.x = 400;
 		ball.y = 225;
-		ws.send(JSON.stringify(score1));
+		send_scores()
 
 	}
 
@@ -132,7 +147,8 @@ function update ()
 		this.player2PointsText.setText(`Player2: ${this.player2_points}`);
 		ball.x = 400;
 		ball.y = 225;
-		ws.send(JSON.stringify(score2));
+		send_scores()
+		
 	}
 
 

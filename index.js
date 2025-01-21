@@ -44,10 +44,10 @@ ws_server.on('connection', function (conn) {
 		if (info.y != null) {
 			player2.send( JSON.stringify(info));
 		}
-		if (info.by != null) {
+		else if(info.by != null) {
 			player2.send( JSON.stringify(info) );
 		}
-		else if(info.score1 != null || info.score2 != null) {
+		else if(info.scores != null) {
 			player2.send( JSON.stringify(info) );
 		}
 	});
