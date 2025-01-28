@@ -34,9 +34,15 @@ ws_server.on('connection', function (conn) {
 		};
 
 		player1.send(JSON.stringify(info) );
-	
+		
+		player1.on('close', function () {
+		player1 = null;
+		console.log("Player 1 disconnected");
+		
+		});
+		
 		player1.on('message', function (msg) {
-		console.log("Jugador 1: "+msg);
+		//console.log("Jugador 1: "+msg);
 		if (player2 == null)
 			return;
 
@@ -47,11 +53,33 @@ ws_server.on('connection', function (conn) {
 		else if(info.by != null) {
 			player2.send( JSON.stringify(info) );
 		}
-		else if(info.scores != null) {
-			player2.send( JSON.stringify(info) );
-		}
-	});
+		
+		else if(info.score1 != null) {
 
+			player2.send( JSON.stringify(info) );
+
+			if(info.score1 >= 3 || info.score2 >= 3) {
+
+
+			let data = {
+				game_over: true
+			};
+
+			if (info.score1 >= 3)
+				data.winner = 1;
+			else
+				data.winner = 2;
+
+			let data_json = JSON.stringify(data);
+
+			player1.send( data_json );
+			player1.send( data_json );
+			return;
+		}
+
+		
+	   }
+	});
 }
 
 	else if (player2 == null) {
@@ -59,13 +87,33 @@ ws_server.on('connection', function (conn) {
 	
 		let info = {
 			player_num: 2
-		};
+		}
 
 		player2.send(JSON.stringify(info) );
 	
+		player2.on('close', function () {
+		player2 = null;
+		console.log("Player 2 disconnected");
 		
+		});
+		
+		setTimeout(function() {
+			let info = {
+				game_start: true
+			};
+
+			let info_json = JSON.stringify(info);
+			
+			player1.send( info_json );
+			player1.send( info_json );
+				
+
+		}, 500);
+
+		
+
 		player2.on('message', function (msg) {
-		console.log("Jugador 2: "+msg);
+		//console.log("Jugador 2: "+msg);
 		if (player1 == null)
 			return;
 
